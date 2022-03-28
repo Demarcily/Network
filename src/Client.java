@@ -21,21 +21,14 @@ public class Client {
 
     // GO
     try {
-      Scanner tgb = new Scanner(System.in);
       PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
-      BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-      //ListenerThread in = new ListenerThread(new BufferedReader(new InputStreamReader(socket.getInputStream()
-      // )));
-      //Thread listener = new Thread(in);
-      //listener.start();
+      ListenerThread in = new ListenerThread(new BufferedReader(new InputStreamReader(socket.getInputStream())));
+      Thread listener = new Thread(in);
+      listener.start();
+      Scanner tgb = new Scanner(System.in);
       boolean run = true;
       while (run) {
-        String msg = in.readLine();
-        System.out.println(msg);
-        msg = in.readLine();
-        System.out.println(msg);
-        msg = tgb.nextLine();
+        String msg = tgb.nextLine();
         if (msg.equals("quit")) {
           run = false;
           out.println(msg);

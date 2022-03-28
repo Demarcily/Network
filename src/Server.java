@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Server {
   public static void main(String[] args){
+    String username = null;
     int port = 8000;
     boolean run = true;
     ServerSocket serverSocket;
@@ -21,22 +22,22 @@ public class Server {
         socket = serverSocket.accept();
         // Go
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-        //ListenerThread in =
-        //        new ListenerThread(new BufferedReader(new InputStreamReader(socket.getInputStream())));
-        //Thread listener = new Thread(in);
-        //listener.start();
+        ListenerThread in = new ListenerThread(new BufferedReader(new InputStreamReader(socket.getInputStream())));
+        Thread listener = new Thread(in);
+        listener.start();
         System.out.println("Client connected!");
         Scanner tgb = new Scanner(System.in);
         //Protocol
         while (run) {
-          out.println("SERVER: Welcome! \n What's your name?");
-          String msg = in.readLine();
+          if (username == null) {
+            out.println("SERVER: Welcome! \n What's your name?");
+            username = tgb.nextLine();
+          }
+          String msg = tgb.nextLine();
           if (msg.equals("quit")) {
             run = false;
           } else {
-            System.out.println(msg);
+            out.println(msg);
           }
         }
         out.close();
